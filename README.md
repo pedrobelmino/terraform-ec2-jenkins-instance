@@ -1,4 +1,4 @@
-LAB para criação de container ec2 utilizando terraform
+LAB para criação de um container ec2 jenkins utilizando terraform
 ============================
 
 **Pré-requisitos**
