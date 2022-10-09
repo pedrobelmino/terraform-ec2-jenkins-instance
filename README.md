@@ -12,6 +12,11 @@ LAB para criação de container ec2 utilizando terraform
 - https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#KeyPairs:
 - Baixar arquivo pem 'terraform.pem' e deixar um nível acima da pasta do projeto
 
+**Inicialização**
+```bash
+terraform init
+```
+
 **Planejamento**
 ```bash
 terraform plan
@@ -32,7 +37,7 @@ terraform destroy
 ssh -i "../terraform.pem" [IP]
 ```
 
-**Conectado na instância EC2, Recuperar chave para acesso**
+**Conectado na instância EC2, recuperar chave de acesso**
 ```bash
 sudo docker logs jenkins  
 ```
