@@ -25,12 +25,35 @@ resource "aws_instance" "techtalks_terraform_ec2_1" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
-      "sudo apt-get install docker.io -y",
+      "sudo apt-get install docker.io unzip -y",
       "sudo service docker start",
       "sudo chmod 666 /var/run/docker.sock",
-      "docker run -d -v /home/ubuntu/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -p 80:8080 -p 5000:5000 pedrobelmino/jenkins-with-docker:latest"
+      "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o 'awscliv2.zip'",
+      "unzip awscliv2.zip",
+      "sudo ./aws/install",
+      "mkdir /home/ubuntu/.aws"
     ]
   }
+
+  provisioner "file" {
+    source      = "/root/.aws/config" # substituir por caminho da config AWS
+    destination = "/home/ubuntu/.aws/config"
+  }
+
+  provisioner "file" {
+    source      = "/root/.aws/credentials" # substituir por caminho da credential AWS
+    destination = "/home/ubuntu/.aws/credentials"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "aws s3 cp s3://belmino-jenkins-backup/jenkins-2022-10-15.zip jenkins-2022-10-15.zip", # substituir pelo caminho do backup para bucket/zip do jenkins home
+      "unzip jenkins-2022-10-15.zip", # substituir pelo caminho do backup para bucket/zip do jenkins home
+      "sudo docker run -d -v /home/ubuntu/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -p 80:8080 -p 5000:5000 pedrobelmino/jenkins-with-docker:latest"
+    ]
+
+  }
+  
   connection {
       type        = "ssh"
       host        = self.public_ip
